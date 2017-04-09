@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+number_of_files = 1
+
 #funcion returns a list of pages for a particular condition
 def get_pages(condition):
     page = requests.get("https://www.drugs.com/condition/" + condition + ".html")
@@ -27,30 +29,35 @@ def build_content(pages):
         result.append(text)
     return result
 
-texts = build_content(get_pages('acne'))
+#function generates different files with content from the given list
+def generate_files(texts):
+    for item in texts:
+        global number_of_files
+        filename = "doc" + str(number_of_files)
+        myfile = open('./'+filename+'.txt', 'w+')
+        myfile.write(item)
+        myfile.close()
+        number_of_files = number_of_files + 1
 
-for item in texts:
-    print item
-    print "######################\n"
 
-# page = requests.get("https://www.drugs.com/aconite.html")
-#
-# soup = BeautifulSoup(page.content, 'html.parser')
-#
-# #print(soup.prettify())
-#
-# html = list(soup.children)[2]
-#
-# body = list(html.children)
-#
-# #for item in list(body.children):
-#     #print item
-#     #print "\n######################\n"
-#
-# count = 0
-#
-# for p in soup.find_all('p'):
-#     print p.get_text()
-#     count = count + 1
-#     if count == 8:
-#         break
+#main subjects:
+acne = build_content(get_pages('acne'))
+insomnia = build_content(get_pages('insomnia'))
+
+#other subjects:
+depression = build_content(get_pages('depression'))
+pain = build_content(get_pages('pain'))
+hepatitisa = build_content(get_pages('hepatitis-a'))
+menopausal = build_content(get_pages('menopausal-disorders'))
+diarrhea = build_content(get_pages('diarrhea'))
+cold = build_content(get_pages('cold-symptoms'))
+
+#generates in total: 200 documents
+generate_files(acne)
+generate_files(insomnia)
+generate_files(depression)
+generate_files(pain)
+generate_files(hepatitisa)
+generate_files(menopausal)
+generate_files(diarrhea)
+generate_files(cold)
